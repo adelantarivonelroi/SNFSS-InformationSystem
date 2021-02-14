@@ -1,0 +1,248 @@
+<?php
+	# displays total number of records from a chosen table
+	function countData($table)
+	{
+		include 'config.php';
+		$sql_count = "SELECT COUNT(*) AS total FROM $table
+			WHERE Status!='Archived'";
+		$result = $con->query($sql_count);
+
+		$data = mysqli_fetch_assoc($result);
+		return $data['total'];
+	}
+
+	# hides elements if customer is not logged in
+	function toggleUser()
+	{
+		if (!isset($_SESSION['userid']))
+		{	
+			echo 'style="display:none;"';
+		}
+	}
+	function toggleprofile()
+	{
+		if(isset($_SESSION['userid']))
+		{
+			echo 'style="display:none;"';
+		}
+	}
+
+	# hides elements if customer is logged in
+	function toggleGuest()
+	{
+		if (isset($_SESSION['userid']))
+		{
+			echo 'style="display:none;"';
+		}
+	}
+
+	# gets path of application folder
+	function getAppFolder()
+	{
+	    $protocol  = empty($_SERVER['HTTPS']) ? 'http' : 'https';
+	    $port      = $_SERVER['SERVER_PORT'];
+	    $disp_port = ($protocol == 'http' && $port == 80 || $protocol == 'https' && $port == 443) ? '' : ":$port";
+	    $domain    = $_SERVER['SERVER_NAME'];
+	    
+	    return "${protocol}://${domain}${disp_port}" . "/snfss/";
+	}
+
+	# checks if user has logged in; redirects to login page if not logged in
+	function validateAccess()
+	{
+		if (!isset($_SESSION['userid']))
+		{
+			$admin_login = 'index.php';
+			$lastURL = $_SERVER['REQUEST_URI'];
+			header('location: /snfss/' . $admin_login);
+		}
+	}
+
+	function validatePersonnel()
+	{
+		$usertype = $_SESSION['usertype'];
+    	if ($usertype == 'Admin')
+        {
+        	header('location: user/Admin/index.php');
+        }
+        if ($usertype == 'Department Head')
+        {
+        	header('location: user/DepartmentHead/index.php');
+        }
+        if ($usertype == 'Faculty')
+        {
+        	header('location: user/Faculty/index.php');
+        }
+        if ($usertype == 'IT Personnel')
+        {
+        	header('location: user/ITPersonnel/index.php');
+        }
+        if ($usertype == 'Parents')
+        {
+        	header('location: user/Parents/index.php');
+        }
+        if ($usertype == 'Principal')
+        {
+        	header('location: user/Principal/index.php');
+        }
+        if ($usertype == 'Registrar')
+        {
+        	header('location: user/Registrar/index.php');
+        }
+       	if ($usertype == 'Student Services Officer')
+        {
+        	header('location: user/StudentServicesOfficer/index.php');
+        }
+        if ($usertype == 'Visitor')
+        {
+        	header('location: user/Visitor/index.php');
+        }
+	}
+
+#validate user Access
+	function validateAdmin()
+	{
+		$usertype = $_SESSION['usertype'];
+	    if(isset($_SESSION['userid']))
+	    {
+	        if ($usertype == 'Admin')
+	        {
+	        }
+	        else
+	        {
+	            header('location:'.app_path.'invalid.php');
+	        }
+	    }
+	}
+
+	#validate user Access
+	function validateDepartmentHead()
+	{
+		$usertype = $_SESSION['usertype'];
+	    if(isset($_SESSION['userid']))
+	    {
+	        if ($usertype == 'Department Head')
+	        {
+	        }
+	        else
+	        {
+	            header('location:'.app_path.'invalid.php');
+	        }
+	    }
+	}
+
+	function validateFaculty()
+	{
+		$usertype = $_SESSION['usertype'];
+	    if(isset($_SESSION['userid']))
+	    {
+	        if ($usertype == 'Faculty')
+	        {
+	        }
+	        else
+	        {
+	            header('location:'.app_path.'invalid.php');
+	        }
+	    }
+	}
+
+	function validateITPersonnel()
+	{
+		$usertype = $_SESSION['usertype'];
+	    if(isset($_SESSION['userid']))
+	    {
+	        if ($usertype == 'IT Personnel')
+	        {
+	        }
+	        else
+	        {
+	            header('location:'.app_path.'invalid.php');
+	        }
+	    }
+	}
+
+	function validateParents()
+	{
+		$usertype = $_SESSION['usertype'];
+	    if(isset($_SESSION['userid']))
+	    {
+	        if ($usertype == 'Parents')
+	        {
+	        }
+	        else
+	        {
+	            header('location:'.app_path.'invalid.php');
+	        }
+	    }
+	}
+
+	function validatePrincipal()
+	{
+		$usertype = $_SESSION['usertype'];
+	    if(isset($_SESSION['userid']))
+	    {
+	        if ($usertype == 'Principal')
+	        {
+	        }
+	        else
+	        {
+	            header('location:'.app_path.'invalid.php');
+	        }
+	    }
+	}
+	function validateRegistrar()
+	{
+		$usertype = $_SESSION['usertype'];
+	    if(isset($_SESSION['userid']))
+	    {
+	        if ($usertype == 'Registrar')
+	        {
+	        }
+	        else
+	        {
+	            header('location:'.app_path.'invalid.php');
+	        }
+	    }
+	}
+	function validateStudentServicesOfficer()
+	{
+		$usertype = $_SESSION['usertype'];
+	    if(isset($_SESSION['userid']))
+	    {
+	        if ($usertype == 'Student Services Officer')
+	        {
+	        }
+	        else
+	        {
+	            header('location:'.app_path.'invalid.php');
+	        }
+	    }
+	}
+	function validateVisitor()
+	{
+		$usertype = $_SESSION['usertype'];
+	    if(isset($_SESSION['userid']))
+	    {
+	        if ($usertype == 'Visitor')
+	        {
+	        }
+	        else
+	        {
+	            header('location:'.app_path.'invalid.php');
+	        }
+	    }
+	}
+
+
+
+	function validate_data($data)
+    {
+	    include('config.php');
+	    $data = trim($data);
+	    $data = stripslashes($data);
+	    $data = strip_tags($data);
+	    $data = htmlspecialchars($data);
+	    $data = mysqli_real_escape_string($con, $data);
+	    return $data;    
+	}
+
